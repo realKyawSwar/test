@@ -1,0 +1,47 @@
+{
+    "path" : {
+        "regen" : "R:/MAINT/PUBLIC/Public SDE/SDE Regen Status/SDE- Regen & Carrier Change Schedule.xlsm",
+        "cryopump" : "D:/Desktop/Work projects/sample/sample/Cryopump PM2.xlsx",
+        "gvcylinder" : "D:/Desktop/Work projects/sample/sample/GV, VAC & ATM Cylinder Position (Latest).xlsx",
+        "allEqt" : "D:/Desktop/Work projects/sample/sample/Equipment PM.xlsx"
+    },
+    "period": {
+        "cryopump" : 22,
+        "TDU" : 48,
+        "TDUgreasing" : 6,
+        "carrierForce" : 3,
+        "carrierLock" : 12,
+        "vacuumMotor" : 18,
+        "compressor" : 42,
+        "ppRobot" : 24,
+        "ppArm" : 12,
+        "xferRobot" : 48,
+        "xferArm" : 24,
+        "epsonRobot" : 60,
+        "orifice" : 5,
+        "bias" : 60,
+        "MU600" : 30,
+        "GV" : 24,
+        "vatmGV" : 36,
+        "roboBatt" : 24
+    },
+    "penalty": {
+        "Bias" : 4,
+        "Carrier Force" : 3,
+        "Carrier Lock" : 4,
+        "Compressor" : 5,
+        "Corner TDU" : 1,
+        "Cryopump" : 4,
+        "EGV Cylinder" : 2,
+        "Epson" : 1,
+        "MU600" : 3,
+        "Orifice" : 5,
+        "PGV Cylinder" : 2,
+        "Process TDU" : 1,
+        "Robot" : 5,
+        "Robot Arm" : 5,
+        "Robot Batteries" : 1,
+        "TDU Greasing" : 4,
+        "Vacuum Motor" : 4
+    }
+}

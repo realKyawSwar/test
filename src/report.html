@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+
+<body>
+
+    <div id="app1">
+        <!-- Vue app-->
+        <v-app1>
+            <v-content>
+                <v-app-bar color="magenta" dense dark app clipped-center>
+                    <v-app-bar-nav-icon></v-app-bar-nav-icon>
+                    <v-toolbar-title>Equipment testing ${date1}</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                </v-app-bar>
+                <v-container fluid>
+                    <v-row>
+                        <v-col>
+                            <v-card class="mx-auto" max-width="750">
+                                <v-toolbar dense flat>
+                                    <v-toolbar-title>Performance Testing</v-toolbar-title>
+                                </v-toolbar>
+                                <v-card-title>
+                                </v-card-title>
+                                <ve-histogram :data="chartData" :settings="chartSettings">
+                                </ve-histogram>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-content>
+        </v-app1>
+    </div>
+
+    <div id="app">
+        <!-- Vue app-->
+        <v-app>
+            <v-content>
+                <v-container fluid>
+                    <v-row>
+                        <v-col>
+                            <v-card class="mx-auto" max-width="800">
+                                <v-toolbar dense flat>
+                                    <v-toolbar-title>Performance per Line</v-toolbar-title>
+                                </v-toolbar>
+                                <v-card-title>
+                                </v-card-title>
+                                <ve-pie :data="chartData" :settings="chartSettings" :toolbox="toolbox" :legend="legend">
+                                </ve-pie>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-content>
+        </v-app>
+    </div>
+    <!-- loading dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@4.8.0/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.2.6/dist/vuetify.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/v-charts@1.19.0/lib/index.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
+    <script>
+        const app1 = new Vue({
+            el: '#app1',
+            vuetify: new Vuetify(),
+            delimiters: ['${', '}'],
+            data() {
+                return {
+                    date1: '31 August 2020 23:11',
+                    chartSettings: {
+                        dimension: ['Line'],
+                        metrics: ['Quantity'],
+                    },
+                    chartData: {
+                        columns: ['Line', 'Quantity'],
+                        rows: [{'Line': 201, 'Quantity': 34}, {'Line': 202, 'Quantity': 13}, {'Line': 203, 'Quantity': 58}, {'Line': 204, 'Quantity': 62}, {'Line': 205, 'Quantity': 58}, {'Line': 208, 'Quantity': 14}, {'Line': 209, 'Quantity': 45}, {'Line': 210, 'Quantity': 28}, {'Line': 211, 'Quantity': 87}]
+                    }
+                }
+            }
+        })
+    </script>
+    <script>
+        const app = new Vue({
+            el: '#app',
+            vuetify: new Vuetify(),
+            delimiters: ['${', '}'],
+            data() {
+                return {
+                    legend: {
+                        type: 'scroll',
+                        orient: 'vertical',
+                        right: 50
+                    },
+                    date: '31 August 2020 23:11',
+                    chartSettings : {
+                      selectedMode: 'single',
+                      dimension: ['Equipment'],
+                      metrics: ['Quantity'],
+                      radius: 130,
+                        },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {
+                               // Show the title when mouse focus
+                                title: 'Save Picture'
+                            },
+                              dataView: {
+                                show: true,
+                                title: 'Data View',
+                                lang: ['Data View', 'close', 'refresh']
+                              }
+                        }
+                    },
+                    chartData: {
+                        columns: ['Equipment', 'Quantity'],
+                        rows: [{'Equipment': 'EGV Cylinder', 'Quantity': 124}, {'Equipment': 'Process TDU', 'Quantity': 114}, {'Equipment': 'Cryopump', 'Quantity': 43}, {'Equipment': 'Bias', 'Quantity': 28}, {'Equipment': 'PGV Cylinder', 'Quantity': 19}, {'Equipment': 'Compressor', 'Quantity': 16}, {'Equipment': 'Robot Arm', 'Quantity': 9}, {'Equipment': 'Corner TDU', 'Quantity': 8}, {'Equipment': 'Brooks Robot', 'Quantity': 5}, {'Equipment': 'Carrier Force', 'Quantity': 5}, {'Equipment': 'Robot Batteries', 'Quantity': 5}, {'Equipment': 'VAC Cylinder', 'Quantity': 5}, {'Equipment': 'MU600', 'Quantity': 4}, {'Equipment': 'Orifice', 'Quantity': 4}, {'Equipment': 'TDU Greasing', 'Quantity': 4}, {'Equipment': 'ATM Cylinder', 'Quantity': 3}, {'Equipment': 'Carrier Lock', 'Quantity': 2}, {'Equipment': 'Epson', 'Quantity': 1}]
+                    }
+                }
+            }
+        })
+    </script>
+
+</body>
+
+</html>
