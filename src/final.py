@@ -42,15 +42,27 @@ def line_select(df, line):
     return temp_dict
 
 
+def scatter_data(df, eqt):
+    temp_df = df.loc[df['Type'] == eqt]
+    temp_df['Past Due'] = temp_df['Past Due'].apply(lambda x: x.days)
+    temp_df['Date'] = temp_df['Date'].apply(lambda x: x[:10])
+    temp_df['Due Date'] = temp_df['Due Date'].apply(lambda x: x[:10])
+    temp = temp_df.to_dict("records")
+    return temp
+
+
 if __name__ == "__main__":
     templater = DefaultTemplater("template.html", "report.html")
     df = pd.read_csv('final.csv', sep=';', index_col=False)
     df = preprocess_df(df)
     df_203 = df_for_line(df, 203, -1000)
     line_df = df.groupby("Line").Line.count().to_dict()
+    # print(line_df)
     type_df = df.groupby("Type").Type.count().to_dict()
+    # print(type_df)
     data = pd.Series(line_df).reset_index(name='Quantity').rename(
                  columns={'index': 'Line'})
+    # print(data)
     data1 = pd.Series(type_df).reset_index(name='Quantity').rename(
                  columns={'index': 'Equipment'})
     rowy = list(data1.to_dict("index").values())
@@ -63,12 +75,17 @@ if __name__ == "__main__":
     hist_columns = [pie_rows[i]['Equipment'] for i in range(len(pie_rows))]
     hist_metrics = [pie_rows[i]['Equipment'] for i in range(len(pie_rows))]
     hist_columns.insert(0, "Line")
-    # dimension1 = [pie_rows[i]['Equipment'] for i in range(len(pie_rows))]
     hist_stack = {'whatever': hist_metrics}
     date = "'" + datetime.now().strftime("%d %B %Y %H:%M") + "'"
     print(date)
+    eqt_list = type_df.keys()
+    scatter_rows = {"Cryopump": scatter_data(df, "Cryopump")}
+    # scatter_rows = {}
+    # for i in eqt_list:
+    #     scatter_rows[i] = scatter_data(df, i)
+    # print(scatter_rows)
+    scatter_columns = ['Past Due', 'Line', 'Location', 'Type', 'Due Date']
     tags = {
-        # "date": "'August 2020'",
         "date": date,
         "pie_metrics": pie_metrics,
         "pie_dimension": pie_dimension,
@@ -77,7 +94,11 @@ if __name__ == "__main__":
         "hist_metrics": hist_metrics,
         "hist_rows": hist_rows,
         "hist_columns": hist_columns,
-        "hist_stack": hist_stack
+        "hist_stack": hist_stack,
+        "scatter_rows": scatter_rows,
+        "scatter_columns": scatter_columns,
+        "scatter_dimension": ['Past Due'],
+        "scatter_metrics": ['Line', 'Location', 'Type', 'Due Date']
     }
 
     templater.render(tags)

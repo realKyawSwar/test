@@ -8,56 +8,59 @@
 
 <body>
 
-    <div id="app1">
+    <div id="app">
         <!-- Vue app-->
         <v-app1>
             <v-content>
-                <v-app-bar color="magenta" dense dark app clipped-center>
-                    <v-app-bar-nav-icon></v-app-bar-nav-icon>
-                    <v-toolbar-title>Equipment testing ${date1}</v-toolbar-title>
-                    <v-spacer></v-spacer>
+                <v-app-bar color="deep-purple accent-4" dense dark>
+                    Equipment Overdue on ${date}
                 </v-app-bar>
                 <v-container fluid>
                     <v-row>
                         <v-col>
-                            <v-card class="mx-auto" max-width="750">
-                                <v-toolbar dense flat>
-                                    <v-toolbar-title>Performance Testing</v-toolbar-title>
+                            <v-card>
+                    <v-spacer></v-spacer>
+                    <v-toolbar dense flat>
+                                <v-toolbar-title>Overdue Equipment by Line</v-toolbar-title>
                                 </v-toolbar>
                                 <v-card-title>
                                 </v-card-title>
-                                <ve-histogram :data="chartData" :settings="chartSettings">
+                                <ve-histogram :data="histogramData" :settings="histogramSettings" :legend="histLegend" :data-zoom="chartDataZoom">
                                 </ve-histogram>
                             </v-card>
                         </v-col>
+                        <v-col>
+                        <v-card>
+                    <v-spacer></v-spacer>
+                        <v-toolbar dense flat>
+                        <v-toolbar-title>Pie chart</v-toolbar-title>
+                        </v-toolbar>
+                        <v-card-title>
+                        </v-card-title>
+                                <ve-pie :data="pieData" :settings="pieSettings" :toolbox="toolbox" :legend="legend">
+                                </ve-pie>
+                            </v-card>
+                        </v-col>
                     </v-row>
+                    <v-row>
+                    <v-col>
+                    <v-card>
+                    <v-spacer></v-spacer>
+                        <v-toolbar dense flat>
+                        <v-toolbar-title>Scatter chart</v-toolbar-title>
+                        </v-toolbar>
+                        <v-card-title>
+                        </v-card-title>
+                                <ve-scatter :data="scatterData" :settings="scatterSettings">
+                                </ve-scatter>
+                            </v-card>
+                    </v-col>
+                </v-row>
                 </v-container>
             </v-content>
         </v-app1>
     </div>
 
-    <div id="app">
-        <!-- Vue app-->
-        <v-app>
-            <v-content>
-                <v-container fluid>
-                    <v-row>
-                        <v-col>
-                            <v-card class="mx-auto" max-width="800">
-                                <v-toolbar dense flat>
-                                    <v-toolbar-title>Performance per Line</v-toolbar-title>
-                                </v-toolbar>
-                                <v-card-title>
-                                </v-card-title>
-                                <ve-pie :data="chartData" :settings="chartSettings" :toolbox="toolbox" :legend="legend">
-                                </ve-pie>
-                            </v-card>
-                        </v-col>
-                    </v-row>
-                </v-container>
-            </v-content>
-        </v-app>
-    </div>
     <!-- loading dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@4.8.0/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
@@ -67,43 +70,52 @@
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
     <script>
-        const app1 = new Vue({
-            el: '#app1',
-            vuetify: new Vuetify(),
-            delimiters: ['${', '}'],
-            data() {
-                return {
-                    date1: '31 August 2020 23:11',
-                    chartSettings: {
-                        dimension: ['Line'],
-                        metrics: ['Quantity'],
-                    },
-                    chartData: {
-                        columns: ['Line', 'Quantity'],
-                        rows: [{'Line': 201, 'Quantity': 34}, {'Line': 202, 'Quantity': 13}, {'Line': 203, 'Quantity': 58}, {'Line': 204, 'Quantity': 62}, {'Line': 205, 'Quantity': 58}, {'Line': 208, 'Quantity': 14}, {'Line': 209, 'Quantity': 45}, {'Line': 210, 'Quantity': 28}, {'Line': 211, 'Quantity': 87}]
-                    }
-                }
-            }
-        })
-    </script>
-    <script>
         const app = new Vue({
             el: '#app',
             vuetify: new Vuetify(),
             delimiters: ['${', '}'],
             data() {
                 return {
+                    date: '04 September 2020 00:11',
+                    chartDataZoom: [{ type: 'slider' }],
+                    histogramSettings: {
+                        stack: {'whatever': ['EGV Cylinder', 'Process TDU', 'Cryopump', 'Bias', 'PGV Cylinder', 'Compressor', 'Robot Arm', 'Corner TDU', 'Brooks Robot', 'Carrier Force', 'Robot Batteries', 'VAC Cylinder', 'MU600', 'Orifice', 'TDU Greasing', 'ATM Cylinder', 'Carrier Lock', 'Epson']},
+                        metrics: ['EGV Cylinder', 'Process TDU', 'Cryopump', 'Bias', 'PGV Cylinder', 'Compressor', 'Robot Arm', 'Corner TDU', 'Brooks Robot', 'Carrier Force', 'Robot Batteries', 'VAC Cylinder', 'MU600', 'Orifice', 'TDU Greasing', 'ATM Cylinder', 'Carrier Lock', 'Epson'],
+                    },
+                    histLegend: {
+                        padding: [0, 0, 0, 0],
+                        align: "left",
+                        itemGap: 1,
+                        selectorLabel: {
+                          show: true,
+                          distance: 0,
+                          color: "rgba(255, 525, 255, 1)",
+                          backgroundColor: "rgba(232, 28, 28, 1)"
+                        },
+                        selector: [
+                            {
+                                type: 'all or inverse',
+                                // can be any title you like
+                                title: 'X'
+                            }
+                        ]
+                    },
+                    histogramData: {
+                        columns: ['Line', 'EGV Cylinder', 'Process TDU', 'Cryopump', 'Bias', 'PGV Cylinder', 'Compressor', 'Robot Arm', 'Corner TDU', 'Brooks Robot', 'Carrier Force', 'Robot Batteries', 'VAC Cylinder', 'MU600', 'Orifice', 'TDU Greasing', 'ATM Cylinder', 'Carrier Lock', 'Epson'],
+                        rows: [{'Bias': 1, 'Brooks Robot': 2, 'Carrier Force': 1, 'Compressor': 5, 'Cryopump': 5, 'EGV Cylinder': 7, 'MU600': 1, 'Orifice': 1, 'Process TDU': 7, 'Robot Arm': 1, 'Robot Batteries': 1, 'TDU Greasing': 1, 'VAC Cylinder': 1, 'Line': 201}, {'Bias': 7, 'Cryopump': 1, 'MU600': 1, 'Process TDU': 3, 'VAC Cylinder': 1, 'Line': 202}, {'ATM Cylinder': 1, 'Bias': 3, 'Compressor': 1, 'Corner TDU': 2, 'Cryopump': 1, 'EGV Cylinder': 32, 'MU600': 1, 'Process TDU': 15, 'Robot Batteries': 1, 'VAC Cylinder': 1, 'Line': 203}, {'Bias': 4, 'Brooks Robot': 1, 'Carrier Force': 1, 'Compressor': 2, 'Cryopump': 9, 'EGV Cylinder': 28, 'Orifice': 1, 'Process TDU': 12, 'Robot Arm': 2, 'Robot Batteries': 1, 'TDU Greasing': 1, 'Line': 204}, {'ATM Cylinder': 1, 'Bias': 8, 'Brooks Robot': 1, 'Carrier Force': 1, 'Compressor': 2, 'Corner TDU': 1, 'Cryopump': 6, 'PGV Cylinder': 19, 'Process TDU': 15, 'Robot Arm': 1, 'Robot Batteries': 1, 'TDU Greasing': 1, 'VAC Cylinder': 1, 'Line': 205}, {'Cryopump': 4, 'Epson': 1, 'Process TDU': 9, 'Line': 208}, {'Carrier Force': 1, 'Corner TDU': 1, 'Cryopump': 7, 'EGV Cylinder': 22, 'Orifice': 1, 'Process TDU': 11, 'Robot Arm': 1, 'Robot Batteries': 1, 'Line': 209}, {'Bias': 5, 'Compressor': 5, 'Cryopump': 2, 'Process TDU': 16, 'Line': 210}, {'ATM Cylinder': 1, 'Brooks Robot': 1, 'Carrier Force': 1, 'Carrier Lock': 2, 'Compressor': 1, 'Corner TDU': 4, 'Cryopump': 8, 'EGV Cylinder': 35, 'MU600': 1, 'Orifice': 1, 'Process TDU': 26, 'Robot Arm': 4, 'TDU Greasing': 1, 'VAC Cylinder': 1, 'Line': 211}]
+                    },
                     legend: {
                         type: 'scroll',
                         orient: 'vertical',
                         right: 50
                     },
-                    date: '31 August 2020 23:11',
-                    chartSettings : {
+
+                    pieSettings : {
                       selectedMode: 'single',
                       dimension: ['Equipment'],
                       metrics: ['Quantity'],
-                      radius: 130,
+                      radius: 100,
+                      right: 200
                         },
                     toolbox: {
                         feature: {
@@ -118,9 +130,17 @@
                               }
                         }
                     },
-                    chartData: {
+                    pieData: {
                         columns: ['Equipment', 'Quantity'],
                         rows: [{'Equipment': 'EGV Cylinder', 'Quantity': 124}, {'Equipment': 'Process TDU', 'Quantity': 114}, {'Equipment': 'Cryopump', 'Quantity': 43}, {'Equipment': 'Bias', 'Quantity': 28}, {'Equipment': 'PGV Cylinder', 'Quantity': 19}, {'Equipment': 'Compressor', 'Quantity': 16}, {'Equipment': 'Robot Arm', 'Quantity': 9}, {'Equipment': 'Corner TDU', 'Quantity': 8}, {'Equipment': 'Brooks Robot', 'Quantity': 5}, {'Equipment': 'Carrier Force', 'Quantity': 5}, {'Equipment': 'Robot Batteries', 'Quantity': 5}, {'Equipment': 'VAC Cylinder', 'Quantity': 5}, {'Equipment': 'MU600', 'Quantity': 4}, {'Equipment': 'Orifice', 'Quantity': 4}, {'Equipment': 'TDU Greasing', 'Quantity': 4}, {'Equipment': 'ATM Cylinder', 'Quantity': 3}, {'Equipment': 'Carrier Lock', 'Quantity': 2}, {'Equipment': 'Epson', 'Quantity': 1}]
+                    },
+                    scatterSettings: {
+                      dimension: ['Past Due'],
+                      metrics: ['Line', 'Location', 'Type', 'Due Date']
+                    },
+                    scatterData: {
+                        columns: ['Past Due', 'Line', 'Location', 'Type', 'Due Date'],
+                        rows: {'Cryopump': [{'Line': 201, 'Location': 'P2', 'Type': 'Cryopump', 'Date': '2018-04-03', 'Due Date': '2020-01-23', 'Past Due': -221}, {'Line': 201, 'Location': 'P9', 'Type': 'Cryopump', 'Date': '2018-05-20', 'Due Date': '2020-03-10', 'Past Due': -174}, {'Line': 201, 'Location': 'P11', 'Type': 'Cryopump', 'Date': '2018-05-20', 'Due Date': '2020-03-10', 'Past Due': -174}, {'Line': 201, 'Location': 'C3', 'Type': 'Cryopump', 'Date': '2018-05-20', 'Due Date': '2020-03-10', 'Past Due': -174}, {'Line': 201, 'Location': 'P8', 'Type': 'Cryopump', 'Date': '2018-06-12', 'Due Date': '2020-04-02', 'Past Due': -151}, {'Line': 202, 'Location': 'P9', 'Type': 'Cryopump', 'Date': '2018-11-08', 'Due Date': '2020-08-29', 'Past Due': -2}, {'Line': 203, 'Location': 'P13', 'Type': 'Cryopump', 'Date': '2018-09-06', 'Due Date': '2020-06-27', 'Past Due': -65}, {'Line': 204, 'Location': 'P1', 'Type': 'Cryopump', 'Date': '2018-05-25', 'Due Date': '2020-03-15', 'Past Due': -169}, {'Line': 204, 'Location': 'P3', 'Type': 'Cryopump', 'Date': '2018-05-05', 'Due Date': '2020-02-24', 'Past Due': -189}, {'Line': 204, 'Location': 'P4', 'Type': 'Cryopump', 'Date': '2018-07-10', 'Due Date': '2020-04-30', 'Past Due': -123}, {'Line': 204, 'Location': 'P8', 'Type': 'Cryopump', 'Date': '2018-06-10', 'Due Date': '2020-03-31', 'Past Due': -153}, {'Line': 204, 'Location': 'P13', 'Type': 'Cryopump', 'Date': '2018-10-06', 'Due Date': '2020-07-27', 'Past Due': -35}, {'Line': 204, 'Location': 'P19', 'Type': 'Cryopump', 'Date': '2018-10-27', 'Due Date': '2020-08-17', 'Past Due': -14}, {'Line': 204, 'Location': 'P20', 'Type': 'Cryopump', 'Date': '2018-06-15', 'Due Date': '2020-04-05', 'Past Due': -148}, {'Line': 204, 'Location': 'P22', 'Type': 'Cryopump', 'Date': '2018-08-25', 'Due Date': '2020-06-15', 'Past Due': -77}, {'Line': 204, 'Location': 'P23', 'Type': 'Cryopump', 'Date': '2018-09-28', 'Due Date': '2020-07-19', 'Past Due': -43}, {'Line': 205, 'Location': 'P3', 'Type': 'Cryopump', 'Date': '2018-08-20', 'Due Date': '2020-06-10', 'Past Due': -82}, {'Line': 205, 'Location': 'P4', 'Type': 'Cryopump', 'Date': '2018-11-03', 'Due Date': '2020-08-24', 'Past Due': -7}, {'Line': 205, 'Location': 'P5', 'Type': 'Cryopump', 'Date': '2018-07-05', 'Due Date': '2020-04-25', 'Past Due': -128}, {'Line': 205, 'Location': 'P6', 'Type': 'Cryopump', 'Date': '2018-04-21', 'Due Date': '2020-02-10', 'Past Due': -203}, {'Line': 205, 'Location': 'P9', 'Type': 'Cryopump', 'Date': '2018-06-06', 'Due Date': '2020-03-27', 'Past Due': -157}, {'Line': 205, 'Location': 'P13', 'Type': 'Cryopump', 'Date': '2018-07-10', 'Due Date': '2020-04-30', 'Past Due': -123}, {'Line': 208, 'Location': 'P23', 'Type': 'Cryopump', 'Date': '2018-10-03', 'Due Date': '2020-07-24', 'Past Due': -38}, {'Line': 208, 'Location': 'P3', 'Type': 'Cryopump', 'Date': '2018-08-10', 'Due Date': '2020-05-31', 'Past Due': -92}, {'Line': 208, 'Location': 'P5', 'Type': 'Cryopump', 'Date': '2018-08-28', 'Due Date': '2020-06-18', 'Past Due': -74}, {'Line': 208, 'Location': 'P6', 'Type': 'Cryopump', 'Date': '2018-09-07', 'Due Date': '2020-06-28', 'Past Due': -64}, {'Line': 209, 'Location': 'P17', 'Type': 'Cryopump', 'Date': '2018-08-28', 'Due Date': '2020-06-18', 'Past Due': -74}, {'Line': 209, 'Location': 'P20', 'Type': 'Cryopump', 'Date': '2018-08-28', 'Due Date': '2020-06-18', 'Past Due': -74}, {'Line': 209, 'Location': 'P23', 'Type': 'Cryopump', 'Date': '2018-08-28', 'Due Date': '2020-06-18', 'Past Due': -74}, {'Line': 209, 'Location': 'P24', 'Type': 'Cryopump', 'Date': '2018-08-28', 'Due Date': '2020-06-18', 'Past Due': -74}, {'Line': 209, 'Location': 'P9', 'Type': 'Cryopump', 'Date': '2018-10-11', 'Due Date': '2020-08-01', 'Past Due': -30}, {'Line': 209, 'Location': 'P15', 'Type': 'Cryopump', 'Date': '2018-10-11', 'Due Date': '2020-08-01', 'Past Due': -30}, {'Line': 209, 'Location': 'P12', 'Type': 'Cryopump', 'Date': '2018-11-01', 'Due Date': '2020-08-22', 'Past Due': -9}, {'Line': 211, 'Location': 'P1', 'Type': 'Cryopump', 'Date': '2018-02-10', 'Due Date': '2019-12-02', 'Past Due': -273}, {'Line': 211, 'Location': 'P4', 'Type': 'Cryopump', 'Date': '2018-05-15', 'Due Date': '2020-03-05', 'Past Due': -179}, {'Line': 211, 'Location': 'P10', 'Type': 'Cryopump', 'Date': '2018-09-24', 'Due Date': '2020-07-15', 'Past Due': -47}, {'Line': 211, 'Location': 'P12', 'Type': 'Cryopump', 'Date': '2018-09-24', 'Due Date': '2020-07-15', 'Past Due': -47}, {'Line': 211, 'Location': 'P19', 'Type': 'Cryopump', 'Date': '2018-01-25', 'Due Date': '2019-11-16', 'Past Due': -289}, {'Line': 211, 'Location': 'P21', 'Type': 'Cryopump', 'Date': '2018-09-24', 'Due Date': '2020-07-15', 'Past Due': -47}, {'Line': 211, 'Location': 'P22', 'Type': 'Cryopump', 'Date': '2018-09-24', 'Due Date': '2020-07-15', 'Past Due': -47}, {'Line': 211, 'Location': 'P23', 'Type': 'Cryopump', 'Date': '2018-09-24', 'Due Date': '2020-07-15', 'Past Due': -47}, {'Line': 210, 'Location': 'P14', 'Type': 'Cryopump', 'Date': '2018-08-20', 'Due Date': '2020-06-10', 'Past Due': -82}, {'Line': 210, 'Location': 'P6', 'Type': 'Cryopump', 'Date': '2018-09-09', 'Due Date': '2020-06-30', 'Past Due': -62}]}
                     }
                 }
             }

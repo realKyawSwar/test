@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
-<link href="js/materialdesignicons.min.css" rel="stylesheet">
-<link href="js/vuetify.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
 </head>
 
@@ -12,7 +13,7 @@
         <v-app1>
             <v-content>
                 <v-app-bar color="deep-purple accent-4" dense dark>
-                    Equipment Overdue on ${date1}
+                    Equipment Overdue on ${date}
                 </v-app-bar>
                 <v-container fluid>
                     <v-row>
@@ -24,7 +25,7 @@
                                 </v-toolbar>
                                 <v-card-title>
                                 </v-card-title>
-                                <ve-histogram :data="histogramData" :settings="histogramSettings" :legend="histLegend">
+                                <ve-histogram :data="histogramData" :settings="histogramSettings" :legend="histLegend" :data-zoom="chartDataZoom">
                                 </ve-histogram>
                             </v-card>
                         </v-col>
@@ -41,18 +42,33 @@
                             </v-card>
                         </v-col>
                     </v-row>
+                    <v-row>
+                    <v-col>
+                    <v-card>
+                    <v-spacer></v-spacer>
+                        <v-toolbar dense flat>
+                        <v-toolbar-title>Scatter chart</v-toolbar-title>
+                        </v-toolbar>
+                        <v-card-title>
+                        </v-card-title>
+                                <ve-scatter :data="scatterData" :settings="scatterSettings">
+                                </ve-scatter>
+                            </v-card>
+                    </v-col>
+                </v-row>
                 </v-container>
             </v-content>
         </v-app1>
     </div>
 
     <!-- loading dependencies -->
-    <script src="js/echarts.min.js"></script>
-    <script src="js/vue@2.6.11"></script>
-    <script src="js/vuetify.js"></script>
-    <script src="js/index.min.js"></script>
-    <link href="js/materialdesignicons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="js/style.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@4.8.0/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.2.6/dist/vuetify.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/v-charts@1.19.0/lib/index.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
     <script>
         const app = new Vue({
             el: '#app',
@@ -60,15 +76,29 @@
             delimiters: ['${', '}'],
             data() {
                 return {
-                    date1: {{date}},
+                    date: {{date}},
+                    chartDataZoom: [{ type: 'slider' }],
                     histogramSettings: {
                         stack: {{hist_stack}},
                         metrics: {{hist_metrics}},
                     },
                     histLegend: {
-                        padding: [0, 0, 0, 5],
+                        padding: [0, 0, 0, 0],
                         align: "left",
-                        itemGap: 5
+                        itemGap: 1,
+                        selectorLabel: {
+                          show: true,
+                          distance: 0,
+                          color: "rgba(255, 525, 255, 1)",
+                          backgroundColor: "rgba(232, 28, 28, 1)"
+                        },
+                        selector: [
+                            {
+                                type: 'all or inverse',
+                                // can be any title you like
+                                title: 'X'
+                            }
+                        ]
                     },
                     histogramData: {
                         columns: {{hist_columns}},
@@ -79,7 +109,7 @@
                         orient: 'vertical',
                         right: 50
                     },
-                    date: {{date}},
+
                     pieSettings : {
                       selectedMode: 'single',
                       dimension: {{pie_dimension}},
@@ -103,6 +133,14 @@
                     pieData: {
                         columns: {{pie_columns}},
                         rows: {{pie_rows}}
+                    },
+                    scatterSettings: {
+                      dimension: {{scatter_dimension}},
+                      metrics: {{scatter_metrics}}
+                    },
+                    scatterData: {
+                        columns: {{scatter_columns}},
+                        rows: {{scatter_rows}}
                     }
                 }
             }
