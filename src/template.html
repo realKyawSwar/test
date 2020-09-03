@@ -1,33 +1,43 @@
 <!DOCTYPE html>
 <html>
-<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+<link href="js/materialdesignicons.min.css" rel="stylesheet">
+<link href="js/vuetify.min.css" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
 </head>
 
 <body>
 
-    <div id="app1">
+    <div id="app">
         <!-- Vue app-->
         <v-app1>
             <v-content>
-                <v-app-bar color="magenta" dense dark app clipped-center>
-                    <v-app-bar-nav-icon></v-app-bar-nav-icon>
-                    <v-toolbar-title>Equipment testing ${date1}</v-toolbar-title>
-                    <v-spacer></v-spacer>
+                <v-app-bar color="deep-purple accent-4" dense dark>
+                    Equipment Overdue on ${date1}
                 </v-app-bar>
                 <v-container fluid>
                     <v-row>
                         <v-col>
-                            <v-card class="mx-auto" max-width="750">
-                                <v-toolbar dense flat>
-                                    <v-toolbar-title>Performance Testing</v-toolbar-title>
+                            <v-card>
+                    <v-spacer></v-spacer>
+                    <v-toolbar dense flat>
+                                <v-toolbar-title>Overdue Equipment by Line</v-toolbar-title>
                                 </v-toolbar>
                                 <v-card-title>
                                 </v-card-title>
-                                <ve-histogram :data="chartData" :settings="chartSettings">
+                                <ve-histogram :data="histogramData" :settings="histogramSettings" :legend="histLegend">
                                 </ve-histogram>
+                            </v-card>
+                        </v-col>
+                        <v-col>
+                        <v-card>
+                    <v-spacer></v-spacer>
+                        <v-toolbar dense flat>
+                        <v-toolbar-title>Pie chart</v-toolbar-title>
+                        </v-toolbar>
+                        <v-card-title>
+                        </v-card-title>
+                                <ve-pie :data="pieData" :settings="pieSettings" :toolbox="toolbox" :legend="legend">
+                                </ve-pie>
                             </v-card>
                         </v-col>
                     </v-row>
@@ -36,56 +46,13 @@
         </v-app1>
     </div>
 
-    <div id="app">
-        <!-- Vue app-->
-        <v-app>
-            <v-content>
-                <v-container fluid>
-                    <v-row>
-                        <v-col>
-                            <v-card class="mx-auto" max-width="800">
-                                <v-toolbar dense flat>
-                                    <v-toolbar-title>Performance per Line</v-toolbar-title>
-                                </v-toolbar>
-                                <v-card-title>
-                                </v-card-title>
-                                <ve-pie :data="chartData" :settings="chartSettings" :toolbox="toolbox" :legend="legend">
-                                </ve-pie>
-                            </v-card>
-                        </v-col>
-                    </v-row>
-                </v-container>
-            </v-content>
-        </v-app>
-    </div>
     <!-- loading dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/echarts@4.8.0/dist/echarts.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.2.6/dist/vuetify.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/v-charts@1.19.0/lib/index.min.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
-    <script>
-        const app1 = new Vue({
-            el: '#app1',
-            vuetify: new Vuetify(),
-            delimiters: ['${', '}'],
-            data() {
-                return {
-                    date1: {{date}},
-                    chartSettings: {
-                        dimension: {{dimension1}},
-                        metrics: {{metrics1}},
-                    },
-                    chartData: {
-                        columns: {{columns1}},
-                        rows: {{rows1}}
-                    }
-                }
-            }
-        })
-    </script>
+    <script src="js/echarts.min.js"></script>
+    <script src="js/vue@2.6.11"></script>
+    <script src="js/vuetify.js"></script>
+    <script src="js/index.min.js"></script>
+    <link href="js/materialdesignicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="js/style.min.css">
     <script>
         const app = new Vue({
             el: '#app',
@@ -93,17 +60,32 @@
             delimiters: ['${', '}'],
             data() {
                 return {
+                    date1: {{date}},
+                    histogramSettings: {
+                        stack: {{hist_stack}},
+                        metrics: {{hist_metrics}},
+                    },
+                    histLegend: {
+                        padding: [0, 0, 0, 5],
+                        align: "left",
+                        itemGap: 5
+                    },
+                    histogramData: {
+                        columns: {{hist_columns}},
+                        rows: {{hist_rows}}
+                    },
                     legend: {
                         type: 'scroll',
                         orient: 'vertical',
                         right: 50
                     },
                     date: {{date}},
-                    chartSettings : {
+                    pieSettings : {
                       selectedMode: 'single',
-                      dimension: {{dimension}},
-                      metrics: {{metrics}},
-                      radius: 130,
+                      dimension: {{pie_dimension}},
+                      metrics: {{pie_metrics}},
+                      radius: 100,
+                      right: 200
                         },
                     toolbox: {
                         feature: {
@@ -118,9 +100,9 @@
                               }
                         }
                     },
-                    chartData: {
-                        columns: {{columns}},
-                        rows: {{rows}}
+                    pieData: {
+                        columns: {{pie_columns}},
+                        rows: {{pie_rows}}
                     }
                 }
             }
