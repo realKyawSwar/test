@@ -51,7 +51,7 @@
                         </v-toolbar>
                         <v-card-title>
                         </v-card-title>
-                                <ve-scatter :data="scatterData" :settings="scatterSettings">
+                                <ve-scatter :data="scatterData" :settings="scatterSettings" :extend="chartExtend" :data-zoom="chartDataZoom" :legend="histLegend">
                                 </ve-scatter>
                             </v-card>
                     </v-col>
@@ -135,8 +135,37 @@
                         rows: {{pie_rows}}
                     },
                     scatterSettings: {
-                      dimension: {{scatter_dimension}},
-                      metrics: {{scatter_metrics}}
+                        dimension: {{scatter_dimension}},
+                        metrics: {{scatter_metrics}},
+                        symbolSize: 10
+                    },
+                   chartExtend :{
+                      yAxis: {
+                        type: 'value',
+                        min: 201,
+                        max: 211,
+                        interval: 1,
+                        axisLine: {
+                          show: true,
+                          lineStyle: {
+                            color: '#00f',
+                            width: 1
+                          }
+                        }
+                      },
+                      xAxis: {
+                        type: 'value',
+                        scale: true,
+                        minInterval: 1,
+                        maxInterval: 3600 * 1000 * 24,
+                        axisLine: {
+                          show: true,
+                          lineStyle: {
+                            color: '#f00',
+                            width: 1
+                          }
+                        }
+                      }
                     },
                     scatterData: {
                         columns: {{scatter_columns}},

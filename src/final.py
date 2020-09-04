@@ -45,9 +45,13 @@ def line_select(df, line):
 def scatter_data(df, eqt):
     temp_df = df.loc[df['Type'] == eqt]
     temp_df['Past Due'] = temp_df['Past Due'].apply(lambda x: x.days)
-    temp_df['Date'] = temp_df['Date'].apply(lambda x: x[:10])
+    # temp_df['Date'] = temp_df['Date'].apply(lambda x: x[:10])
     temp_df['Due Date'] = temp_df['Due Date'].apply(lambda x: x[:10])
+    temp_df.sort_values(by=['Past Due'], inplace=True)
+    temp_df['Due Date'] = temp_df['Due Date'].map(str)
+    temp_df = temp_df.drop(['Date'], axis=1)
     temp = temp_df.to_dict("records")
+    # print(temp_df['Past Due'])
     return temp
 
 
@@ -66,6 +70,7 @@ if __name__ == "__main__":
     data1 = pd.Series(type_df).reset_index(name='Quantity').rename(
                  columns={'index': 'Equipment'})
     rowy = list(data1.to_dict("index").values())
+    # print(rowy)
     pie_rows = sorted(rowy, key=lambda d: d['Quantity'], reverse=True)
     pie_columns = list(pie_rows[0].keys())
     pie_dimension = ['Equipment']
@@ -78,13 +83,19 @@ if __name__ == "__main__":
     hist_stack = {'whatever': hist_metrics}
     date = "'" + datetime.now().strftime("%d %B %Y %H:%M") + "'"
     print(date)
-    eqt_list = type_df.keys()
-    scatter_rows = {"Cryopump": scatter_data(df, "Cryopump")}
-    # scatter_rows = {}
-    # for i in eqt_list:
-    #     scatter_rows[i] = scatter_data(df, i)
+    eqt_list = list(type_df.keys())
+    print(eqt_list)
+    # scatter_rows = {"Cryopump": scatter_data(df, "Cryopump")}
     # print(scatter_rows)
-    scatter_columns = ['Past Due', 'Line', 'Location', 'Type', 'Due Date']
+    scatter_rows = {}
+    for i in ['Bias', 'Brooks Robot', 'Carrier Force', 'Carrier Lock',
+              'Compressor', 'Corner TDU', 'Cryopump', 'EGV Cylinder', 'Epson',
+              'Orifice', 'PGV Cylinder', 'Process TDU', 'Robot Arm',
+              'Robot Batteries', 'TDU Greasing', 'VAC Cylinder']:
+    # for i in eqt_list:
+        scatter_rows[i] = scatter_data(df, i)
+    # print(scatter_rows)
+    scatter_columns = ['Past Due', 'Line', 'Location', 'Due Date']
     tags = {
         "date": date,
         "pie_metrics": pie_metrics,
@@ -98,7 +109,7 @@ if __name__ == "__main__":
         "scatter_rows": scatter_rows,
         "scatter_columns": scatter_columns,
         "scatter_dimension": ['Past Due'],
-        "scatter_metrics": ['Line', 'Location', 'Type', 'Due Date']
+        "scatter_metrics": ['Line', 'Location', 'Due Date']
     }
 
     templater.render(tags)
