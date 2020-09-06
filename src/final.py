@@ -50,6 +50,7 @@ def scatter_data(df, eqt):
     temp_df.sort_values(by=['Past Due'], inplace=True)
     temp_df['Due Date'] = temp_df['Due Date'].map(str)
     temp_df = temp_df.drop(['Date'], axis=1)
+    temp_df = temp_df.drop(['Past Due'], axis=1)
     temp = temp_df.to_dict("records")
     # print(temp_df['Past Due'])
     return temp
@@ -84,7 +85,6 @@ if __name__ == "__main__":
     date = "'" + datetime.now().strftime("%d %B %Y %H:%M") + "'"
     print(date)
     eqt_list = list(type_df.keys())
-    print(eqt_list)
     # scatter_rows = {"Cryopump": scatter_data(df, "Cryopump")}
     # print(scatter_rows)
     scatter_rows = {}
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     # for i in eqt_list:
         scatter_rows[i] = scatter_data(df, i)
     # print(scatter_rows)
-    scatter_columns = ['Past Due', 'Line', 'Location', 'Due Date']
+    scatter_columns = ['Due Date', 'Line', 'Location']
     tags = {
         "date": date,
         "pie_metrics": pie_metrics,
@@ -108,12 +108,12 @@ if __name__ == "__main__":
         "hist_stack": hist_stack,
         "scatter_rows": scatter_rows,
         "scatter_columns": scatter_columns,
-        "scatter_dimension": ['Past Due'],
-        "scatter_metrics": ['Line', 'Location', 'Due Date']
+        "scatter_dimension": ['Due Date'],
+        "scatter_metrics": ['Line', 'Location']
     }
 
     templater.render(tags)
 
-    # # with Gmail('kyaw.s.thein@gmail.com', '') as gmail:
-    # #     gmail.send('joshuakyaw@outlook.com', subject='your subject',
-    # #                body='your message', attachment="report.html")
+    # with Gmail('kyaw.s.thein@gmail.com', '') as gmail:
+    #     gmail.send('joshuakyaw@outlook.com', subject='your subject',
+    #                body='your message', attachment="report.html")

@@ -51,7 +51,7 @@
                         </v-toolbar>
                         <v-card-title>
                         </v-card-title>
-                                <ve-scatter :data="scatterData" :settings="scatterSettings" :extend="chartExtend" :data-zoom="chartDataZoom" :legend="histLegend">
+                                <ve-scatter :data="scatterData" :settings="scatterSettings" :extend="chartExtend" :data-zoom="scatterZoom" :legend="histLegend">
                                 </ve-scatter>
                             </v-card>
                     </v-col>
@@ -84,8 +84,10 @@
                     },
                     histLegend: {
                         padding: [0, 0, 0, 0],
-                        align: "left",
-                        itemGap: 1,
+                        left: "0%",
+                        itemWidth: 16,
+                        itemHeight: 10,
+                        itemGap: 4,
                         selectorLabel: {
                           show: true,
                           distance: 0,
@@ -96,7 +98,7 @@
                             {
                                 type: 'all or inverse',
                                 // can be any title you like
-                                title: 'X'
+                                title: 'x'
                             }
                         ]
                     },
@@ -142,22 +144,28 @@
                    chartExtend :{
                       yAxis: {
                         type: 'value',
-                        min: 201,
-                        max: 211,
+                        axisLabel: {
+                            name: "Line",
+                        },
+                        min: 200,
+                        max: 212,
                         interval: 1,
-                        axisLine: {
-                          show: true,
-                          lineStyle: {
-                            color: '#00f',
-                            width: 1
-                          }
-                        }
+                        axisLabel: {
+                          showMinLabel: false,
+                          showMaxLabel: false
+                        },
                       },
                       xAxis: {
-                        type: 'value',
-                        scale: true,
+                        type: 'time',
+                        axisLabel: {
+                          align: "right"
+                        },
+                        // scale: true,
+                        // axisLabel: {
+                        //   formatter: "{value} days"
+                        // },
                         minInterval: 1,
-                        maxInterval: 3600 * 1000 * 24,
+                        // maxInterval: 3600 * 1000 * 24,
                         axisLine: {
                           show: true,
                           lineStyle: {
@@ -167,6 +175,27 @@
                         }
                       }
                     },
+                    scatterZoom: [
+                            {
+                                type: 'slider',
+                                show: true,
+                                xAxisIndex: [0],
+                            },
+                            // {
+                            //     type: 'slider',
+                            //     show: false,
+                            //     yAxisIndex: [0],
+                            //     startValue: 201,
+                            //     endValue: 211,
+                            //     rangeMode: [201, 210],
+                            //     minValueSpan: 1,
+                            //     maxValueSpan: 12,
+                            // },
+                            {
+                                type: 'inside',
+                                xAxisIndex: [0]
+                            }
+                        ],
                     scatterData: {
                         columns: {{scatter_columns}},
                         rows: {{scatter_rows}}
